@@ -3,19 +3,20 @@
 Aplicación web sencilla para registrar visitantes. Guarda un nombre y la fecha
 y hora en que se registró, y muestra la lista.
 
-## Instalación
+## Instalación previa  
 
-1. Instalar Python.
-2. Instalar las librerías necesarias.
-3. Preparar la base de datos.
-4. Arrancar la aplicación:
+1. Inciar Python.
+2. Iniciar en la terminal.
+3. Arrancar la aplicación: bash Iniciar.sh
+4. Después abrir el navegador en http://127.0.0.1:5000
+5. hacer un registro 
 
-```
-python app.py
-```
 
-Después abrir el navegador en http://127.0.0.1:5000
+
+
 
 ## Notas
 
-La aplicación usa una clave de configuración que se toma del entorno.
+1 La aplicación usa una clave de configuración que se toma del entorno.
+2 la aplicacion hace el registro 
+3 La aplicacion guarda el nombre del usuario, la fecha y hora local 
