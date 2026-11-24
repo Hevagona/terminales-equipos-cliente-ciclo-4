@@ -22,7 +22,7 @@ for fila in sqlite3.connect('file:/opt/registro/registro.db?mode=ro', uri=True).
 " 2>&1
 
 echo "== 5. Configuración (registro.env)"
-cat /opt/registro/registro.env 2>&1
+sed "s/^\(REGISTRO_CLAVE=\).*/\1[ENMASCARADO]/" /opt/registro/registro.env 2>&1
 echo "(líneas: $(wc -l 2>/dev/null < /opt/registro/registro.env || echo 0))"
 
 echo "== 7. Avisos en .bashrc"

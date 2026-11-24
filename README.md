@@ -11,6 +11,10 @@ y hora en que se registró, y muestra la lista.
 4. Después abrir el navegador en http://127.0.0.1:5000
 5. hacer un registro 
 
+. Instala Ansible como lo dice tu README. Si tu README no lo dice (anótalo: es una intervención manual), estos son los comandos:
+pip install -r requirements-infra.txt
+export PATH="$HOME/.local/bin:$PATH"
+ansible --version
 
 
 
