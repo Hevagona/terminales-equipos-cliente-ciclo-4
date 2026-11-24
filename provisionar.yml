@@ -1,0 +1,55 @@
+- name: Servidor de pruebas - Registro de Visitas
+  hosts: localhost
+  connection: local
+  become: true
+
+  vars:
+    registro_clave: "{{ lookup('ansible.builtin.env', 'REGISTRO_CLAVE') }}"
+
+  tasks:
+    - name: Mostrar que la clave se leyó sin mostrarla
+      ansible.builtin.debug:
+        msg: "Clave cargada, longitud {{ registro_clave | length }}"
+
+    - name: La clave del servidor de pruebas está en el entorno
+      ansible.builtin.assert:
+        that:
+          - registro_clave | length > 0
+        fail_msg: >
+          Falta REGISTRO_CLAVE. Definela como secreto de Codespaces
+          (Settings > Codespaces > Codespaces secrets) y abre un Codespace nuevo,
+          o en esta terminal: read -s REGISTRO_CLAVE && export REGISTRO_CLAVE
+        quiet: true
+
+    - name: Crear grupo registro
+      ansible.builtin.group:
+        name: registro
+        state: present
+
+    - name: Crear usuario registro
+      ansible.builtin.user:
+        name: registro
+        group: registro
+        system: true
+        shell: /usr/sbin/nologin
+        create_home: false
+
+    - name: Crear carpeta /opt/registro
+      ansible.builtin.file:
+        path: /opt/registro
+        state: directory
+        owner: registro
+        group: registro
+        mode: "0750"
+
+    - name: La configuración del ambiente de pruebas
+      ansible.builtin.copy:
+        dest: /opt/registro/registro.env
+        content: |
+          TZ=America/Bogota
+          REGISTRO_DB=/opt/registro/registro.db
+          REGISTRO_CLAVE={{ registro_clave }}
+        owner: registro
+        group: registro
+        mode: "0600"
+      no_log: true
