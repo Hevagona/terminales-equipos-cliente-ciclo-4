@@ -8,8 +8,8 @@
  
 | # | Qué pasó (error, sorpresa, algo que tuve que hacer a mano) | Qué hice |
 |---|---|---|
-| 1       |
-| 2 | | |
+| 1Me pedía REGISTRO_CLAVE       |
+| 2provisionar.sh daba Permission denied y no creaba .venv | | Creé el venv a mano con python3 -m venv .venv e instalé requirements.txt|
 | 3 | | |
  
 ## B. La prueba en el Codespace nuevo (Parte 2)
