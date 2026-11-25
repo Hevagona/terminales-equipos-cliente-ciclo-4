@@ -21,6 +21,13 @@
           o en esta terminal: read -s REGISTRO_CLAVE && export REGISTRO_CLAVE
         quiet: true
 
+    - name: Instalar paquetes del sistema necesarios
+      ansible.builtin.package:
+        name:
+          - python3-venv
+          - sqlite3
+        state: present
+
     - name: Crear grupo registro
       ansible.builtin.group:
         name: registro
@@ -53,3 +60,53 @@
         group: registro
         mode: "0600"
       no_log: true
+
+    - name: Copiar archivos de la aplicación a /opt/registro
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "/opt/registro/{{ item }}"
+        owner: registro
+        group: registro
+        mode: "0644"
+      loop:
+        - app.py
+        - crear_db.py
+        - requirements.txt
+
+    - name: Crear ambiente virtual e instalar dependencias
+      ansible.builtin.pip:
+        requirements: /opt/registro/requirements.txt
+        virtualenv: /opt/registro/venv
+        virtualenv_command: python3 -m venv
+      become_user: registro
+
+    - name: Inicializar la base de datos
+      ansible.builtin.command:
+        cmd: /opt/registro/venv/bin/python crear_db.py
+        chdir: /opt/registro
+        creates: /opt/registro/registro.db
+      environment:
+        REGISTRO_DB: /opt/registro/registro.db
+      become_user: registro
+
+    - name: Contar visitas en la base de datos
+      ansible.builtin.command:
+        cmd: sqlite3 /opt/registro/registro.db "SELECT COUNT(*) FROM visitas;"
+      register: conteo_visitas
+      changed_when: false
+
+    - name: Insertar visita de verificación si la base está vacía
+      ansible.builtin.command:
+        cmd: >
+          sqlite3 /opt/registro/registro.db
+          "INSERT INTO visitas (nombre, momento) VALUES ('Visita de verificacion', datetime('now', 'localtime'));"
+      when: conteo_visitas.stdout == "0"
+      become_user: registro
+
+    - name: Asegurar permisos correctos en toda la carpeta /opt/registro
+      ansible.builtin.file:
+        path: /opt/registro
+        owner: registro
+        group: registro
+        recurse: false
+        mode: "0750"

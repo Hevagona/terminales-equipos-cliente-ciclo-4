@@ -89,7 +89,7 @@ Ejecutas los comandos de prueba indicados
   - *Prueba en Codespace:* `pip install -r requirements-infra.txt` y `ansible --version`.
 
 ### Fase 2: Completar Ambiente de Pruebas (Prompt 2 - Parte 2)
-- [ ] **Paso 2.1:** Extender `provisionar.yml` para:
+- [x] **Paso 2.1:** Extender `provisionar.yml` para:
   - Copiar los archivos de la app (`app.py`, `requirements.txt`, `crear_db.py`).
   - Crear el entorno virtual (`venv`) en `/opt/registro/venv`.
   - Instalar `requirements.txt` en ese venv.
